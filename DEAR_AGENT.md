@@ -83,6 +83,11 @@ titles its pane `<status glyph> <session name>`, so windows track the most
 recently focused Claude pane. Manually renaming a window turns this off for
 that window (tmux behavior); re-enable with `setw automatic-rename on`.
 
+Known cosmetic edge: "pane never set a title" is detected by comparing
+`pane_title` to the *current* `#{host}`. If the hostname changes (network
+rename), panes still holding the old default title show that stale hostname
+as the window name until they next update their title.
+
 ## Verifying after changes
 
 ```sh
