@@ -460,9 +460,35 @@ tmux_conf_uninstall_plugins_on_reload=false
 # visit https://github.com/tmux-plugins for available plugins
 #set -g @plugin 'tmux-plugins/tmux-copycat'
 #set -g @plugin 'tmux-plugins/tmux-cpu'
-#set -g @plugin 'tmux-plugins/tmux-resurrect'
-#set -g @plugin 'tmux-plugins/tmux-continuum'
-#set -g @continuum-restore 'on'
+
+# -- session persistence ---------------------------------------------------------
+# resurrect saves layout/cwd/programs, continuum auto-saves and auto-restores,
+# assistant-resurrect re-attaches Claude Code sessions (`claude --resume <id>`)
+# into their original panes after a restore. requires jq.
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+set -g @plugin 'timvw/tmux-assistant-resurrect'
+
+# save every 5 minutes, restore automatically when the tmux server starts
+set -g @continuum-save-interval '5'
+set -g @continuum-restore 'on'
+
+# snapshot visible pane contents too, so restored panes aren't blank
+set -g @resurrect-capture-pane-contents 'on'
+
+# to auto-start tmux at login (continuum only knows Terminal.app/iterm/kitty/
+# alacritty — not ghostty or warp), uncomment:
+#set -g @continuum-boot 'on'
+#set -g @continuum-boot-options 'iterm'
+
+# -- window naming ---------------------------------------------------------------
+# name each window after its active pane's title whenever that pane set one:
+# Claude Code titles its pane "<status glyph> <session name>", so a window
+# follows the most recently focused Claude pane in it. panes that never set a
+# title (title still the default hostname, or empty) fall back to the basename
+# of their current directory.
+setw -g automatic-rename on
+setw -g automatic-rename-format '#{?#{||:#{==:#{pane_title},#{host}},#{==:#{pane_title},}},#{b:pane_current_path},#{pane_title}}'
 
 
 # -- custom variables ----------------------------------------------------------
