@@ -428,18 +428,24 @@ set -ga update-environment TERM_PROGRAM
 # by default, launching tmux will update tpm and all plugins
 #   - true (default)
 #   - false
-tmux_conf_update_plugins_on_launch=true
+# /!\ kept false: plugins/tpm is a clone of tpack (https://github.com/tmuxpack/tpack),
+# a drop-in tpm replacement with a TUI. letting Oh my tmux! "update tpm" would
+# git-reset that clone back to upstream tpm and patch scripts that don't exist.
+# update tpack itself with `tpack self-update`, plugins via <prefix> + T or `tpack update`.
+tmux_conf_update_plugins_on_launch=false
 
 # by default, reloading the configuration will update tpm and all plugins
 #   - true (default)
 #   - false
-tmux_conf_update_plugins_on_reload=true
+# /!\ kept false: see note above (tpack manages plugins, not Oh my tmux!)
+tmux_conf_update_plugins_on_reload=false
 
 # by default, reloading the configuration will uninstall tpm and plugins when no
 # plugins are enabled
 #   - true (default)
 #   - false
-tmux_conf_uninstall_plugins_on_reload=true
+# /!\ kept false: a transient parse miss of @plugin lines must never rm -rf plugins/
+tmux_conf_uninstall_plugins_on_reload=false
 
 # /!\ the tpm bindings differ slightly from upstream:
 #   - installing plugins: <prefix> + I
